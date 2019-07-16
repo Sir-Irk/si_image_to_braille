@@ -56,6 +56,14 @@ i32 clamp(i32 val, i32 min, i32 max)
     return max(min(val, max), min);
 }
 
+i32 nearest_multiple(i32 val, i32 m)
+{
+    if(m == 0) return val;
+    i32 remainder = val%m;
+    if(remainder == 0) return val;
+    return val + m - remainder;
+}
+
 int main(int argc, char **argv)
 {
     //TODO: better handling of command line args such as order independence
@@ -78,11 +86,12 @@ int main(int argc, char **argv)
 
     u32 width = (argc > 2) ? atoi(argv[2])*2 : 60;
     //NOTE: Clamping to an arbitrary range for now
-    width = clamp(width, 2, 4096);
+    width = nearest_multiple(clamp(width, 2, 4096), 2);
 
     r32 aspectRatio = inHeight/(r32)inWidth;
 
-    u32 height = (u32)(width*aspectRatio);
+    i32 height = nearest_multiple((i32)(width*aspectRatio), 4);
+    printf("w: %d, h %d\n", width, height);
     u8 *resizedPixels = calloc(width*height, sizeof(u32));
     assert(resizedPixels);
     if(!stbir_resize_uint8(pixels, inWidth, inHeight, 0, resizedPixels, width, height, 0, 4))
