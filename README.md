@@ -20,6 +20,8 @@ Uses the awesome single-header libraries stb_image.h and stb_image_resize.h by S
 
 Blank spaces currently do not use the blank braille character due to it messing up the formatting. This may only be font specific but it messes up the spacing of the other characters due to the blank character being a different width than the other braille characters. I may find a work-around for this later. Note that Twtich chat does not use newline/carraige return characters so in order to get proper formatting you need to output with the [spaces] arg set(1 to enable). Also Twitch chat by default is 30 columns wide
 
+More information about braille patterns https://en.wikipedia.org/wiki/Braille_Patterns
+
 TODO: 
   - [ ] Better command line arg handling  
   - [ ] Cross platform file writing in utf-8(currently uses windows only code)
