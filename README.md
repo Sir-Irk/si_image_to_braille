@@ -4,7 +4,7 @@
 NOTE: I still need to do more testing and tweaking to get better results. This is just the initial version I'm saving.
 Currently is only usable from the command line.
 
-Usage: [filename] [columns] [spaces] [color threshold] [alpha threshold] [red weight] [blue weight] [green weight] [average weight]
+Usage: [filename] [columns] [invert] [spaces] [color threshold] [alpha threshold] [weight]
 
 Blank spaces currently do not use the blank braille character due to it messing up the formatting. This may only be font specific but it messes up the spacing of the other characters due to the blank character being a different width than the other braille characters. I may find a work-around for this later. Note that Twtich chat does not use newline/carraige return characters so in order to get proper formatting you need to output with the [spaces] arg set(1 to enable). Also Twitch chat by default is 30 columns wide
 
