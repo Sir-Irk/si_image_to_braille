@@ -1,7 +1,7 @@
 # si_image_to_braille
 ### Converts an image to braille characters(mainly for spamming in Twitch chat)
 
-NOTE: I still need to do more testing and tweaking to get better results. This is just the initial version I'm saving
+NOTE: I still need to do more testing and tweaking to get better results. This is just the initial version I'm saving.
 Currently is only usable from the command line.
 
 Usage: [filename] [columns] [color threshold] [alpha threshold] [red weight] [blue weight] [green weight] [average weight]
