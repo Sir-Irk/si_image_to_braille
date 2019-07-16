@@ -4,7 +4,15 @@
 NOTE: I still need to do more testing and tweaking to get better results. This is just the initial version I'm saving.
 Currently is only usable from the command line.
 
-Usage: [filename] [columns] [invert] [spaces] [color threshold] [alpha threshold] [weight]
+Usage: [filename] [columns] [invert] [spaces] [color thresh] [alpha thresh] [weight]
+
+- [filename]     : path to file
+- [columns]      : (2-4096) number of columns to output in braille characters(note the image will be resized if needed)
+- [invert]       : (0-1)invert the colors of the input image
+- [spaces]       : (0-1)uses spaces instead of newline characters at the end of each line(for Twitch chat which ignores newlines)
+- [color Thresh] : (0-255)The threshold for derterming if a color's intensity counts as a "raised" bump in braille
+- [alpha Thresh] : (0-255)Used when flattening the alpha channel for images that have transparency to determine filled pixels
+- [weight]       : used when dividing the sum of rgb values. By default this is 3 which simply gives the average intensity
 
 Blank spaces currently do not use the blank braille character due to it messing up the formatting. This may only be font specific but it messes up the spacing of the other characters due to the blank character being a different width than the other braille characters. I may find a work-around for this later. Note that Twtich chat does not use newline/carraige return characters so in order to get proper formatting you need to output with the [spaces] arg set(1 to enable). Also Twitch chat by default is 30 columns wide
 
@@ -19,7 +27,7 @@ TODO:
   
   Example with a random public domain image
   
-  Input:
+  Input: "si_image_to_braille.exe pug.jpg 64 0 0 116" on command line
   
   ![](https://imgur.com/dG7Skc3.png) 
   
