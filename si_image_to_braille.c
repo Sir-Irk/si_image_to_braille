@@ -94,13 +94,11 @@ int main(int argc, char **argv)
         return EXIT_FAILURE;
     }
 
-    if(argc > 3 && atoi(argv[3])) invert_colors((u32 *)resizedPixels, width*height);
-
     b32 useSpaces          = (argc > 4) ? atoi(argv[4]) : 0;
     u32 intensityThreshold = (argc > 5) ? clamp(atoi(argv[5]), 0, 255) : 128;
     u32 alphaThreshold     = (argc > 6) ? clamp(atoi(argv[6]), 0, 255) : 64;
-
     flatten_alpha((u32 *)resizedPixels, width*height, alphaThreshold);
+    if(argc > 3 && atoi(argv[3])) invert_colors((u32 *)resizedPixels, width*height);
 
     //NOTE: 1 extra column for newline char
     i32 outputCount = (ceil(height/4)*ceil(width/2))+ceil(height/4)+1;
