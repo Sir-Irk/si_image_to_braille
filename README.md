@@ -16,7 +16,7 @@ Usage: [filename] [columns] [invert] [spaces] [color thresh] [alpha thresh] [wei
 [weight]       : used when dividing the sum of rgb values. By default this is 3 which simply gives the average intensity
 </pre>
 
-Uses the awesome single-header libraries stb_image.h and stb_image_resize.h by Sean Barrett https://github.com/nothings/stb
+Uses the awesome single-header libraries stb_image.h and stb_image_resize.h by Sean Barrett and co https://github.com/nothings/stb
 
 Blank spaces currently do not use the blank braille character due to it messing up the formatting. This may only be font specific but it messes up the spacing of the other characters due to the blank character being a different width than the other braille characters. I may find a work-around for this later. Note that Twtich chat does not use newline/carraige return characters so in order to get proper formatting you need to output with the [spaces] arg set(1 to enable). Also Twitch chat by default is 30 columns wide
 
