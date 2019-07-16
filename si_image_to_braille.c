@@ -51,40 +51,55 @@ void invert_colors(u32 *pixels, i32 count) {
     }
 }
 
+i32 clamp(i32 val, i32 min, i32 max)
+{
+    return max(min(val, max), min);
+}
+
 int main(int argc, char **argv)
 {
     //TODO: better handling of command line args such as order independence
+    //      and input validation
+    
     if(argc < 2)
     {
         printf("Error: need a file name\n"); 
         printf("Usage: [filename] [columns] [invert] [spaces] [color threshold] [alpha threshold] [weight]\n"); 
-        return 1;
+        return EXIT_FAILURE;
     }
 
     i32 inWidth, inHeight, comp;
     u8 *pixels = stbi_load(argv[1], &inWidth, &inHeight, &comp, 4);
-    assert(pixels);
+    if(!pixels)
+    {
+        printf("failed to load image: %s\n", argv[1]);
+        return EXIT_FAILURE;
+    }
 
     u32 width = (argc > 2) ? atoi(argv[2])*2 : 60;
     //NOTE: Clamping to an arbitrary range for now
-    width = min(4096, max(2, width));
+    width = clamp(width, 2, 4096);
 
     r32 aspectRatio = inHeight/(r32)inWidth;
 
     u32 height = (u32)(width*aspectRatio);
     u8 *resizedPixels = calloc(width*height, sizeof(u32));
+    assert(resizedPixels);
     if(!stbir_resize_uint8(pixels, inWidth, inHeight, 0, resizedPixels, width, height, 0, 4))
     {
         //TODO: perhaps better error handling
         printf("failed to resize image\n");
-        goto exit;
+        free(pixels);
+        free(resizedPixels);
+        return EXIT_FAILURE;
     }
 
     if(argc > 3 && atoi(argv[3])) invert_colors((u32 *)resizedPixels, width*height);
 
-    b32 useSpaces = (argc > 4) ? atoi(argv[4]) : 0;
-    u32 intensityThreshold = (argc > 5) ? atoi(argv[5]) : 128;
-    u32 alphaThreshold = (argc > 6) ? atoi(argv[6]) : 64;
+    b32 useSpaces          = (argc > 4) ? atoi(argv[4]) : 0;
+    u32 intensityThreshold = (argc > 5) ? clamp(atoi(argv[5]), 0, 255) : 128;
+    u32 alphaThreshold     = (argc > 6) ? clamp(atoi(argv[6]), 0, 255) : 64;
+
     flatten_alpha((u32 *)resizedPixels, width*height, alphaThreshold);
 
     //NOTE: 1 extra column for newline char
@@ -93,19 +108,23 @@ int main(int argc, char **argv)
     wchar_t *output = calloc(outputCount, sizeof(wchar_t));
     assert(output);
 
-    u32 weight = (argc > 7) ? atoi(argv[7]) : 3;
+    u32 weight = (argc > 7) ? clamp(atoi(argv[7]), 0, 255) : 3;
 
     u32 *p32 = (u32 *)resizedPixels;
     i32 outputIndex = 0;
+
     for(i32 outerY = 0; outerY < height; outerY += 4) { 
         for(i32 outerX = 0; outerX < width; outerX += 2) { 
             u8 blockVal  = 0;
             i32 blockIdx = 0;
+            //TODO: see if this can be done row-major without much hassle
             for(i32 x = 0; x < 2; ++x) {
                 for(i32 y = 0; y < 4; ++y) {
                     i32 idx = ((outerY+y)*width) + outerX+x;
                     u32 avg = rgb_sum(p32[idx])/weight;
-                    if(avg < intensityThreshold) blockVal |= (1 << blockIdx);
+                    if(avg < intensityThreshold) {
+                        blockVal |= (1 << blockIdx);
+                    }
                     ++blockIdx;
                 }
             }
