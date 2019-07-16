@@ -82,14 +82,13 @@ int main(int argc, char **argv)
         return EXIT_FAILURE;
     }
 
-    u32 width = (argc > 2) ? atoi(argv[2])*2 : 60;
-    //NOTE: Clamping to an arbitrary range for now
-    width = nearest_multiple(clamp(width, 2, 4096), 2);
-
     r32 aspectRatio = inHeight/(r32)inWidth;
 
+    //NOTE: Clamping width to an arbitrary range for now
+    u32 width = (argc > 2) ? atoi(argv[2])*2 : 60;
+    width = nearest_multiple(clamp(width, 2, 4096), 2);
     i32 height = nearest_multiple((i32)(width*aspectRatio), 4);
-    printf("w: %d, h %d\n", width, height);
+
     u8 *resizedPixels = calloc(width*height, sizeof(u32));
     assert(resizedPixels);
 
@@ -104,16 +103,20 @@ int main(int argc, char **argv)
     b32 useSpaces          = (argc > 4) ? atoi(argv[4]) : 0;
     u32 intensityThreshold = (argc > 5) ? clamp(atoi(argv[5]), 0, 255) : 128;
     u32 alphaThreshold     = (argc > 6) ? clamp(atoi(argv[6]), 0, 255) : 64;
+    u32 weight             = (argc > 7) ? clamp(atoi(argv[7]), 0, 255) : 3;
+
     flatten_alpha((u32 *)resizedPixels, width*height, alphaThreshold);
-    if(argc > 3 && atoi(argv[3])) invert_colors((u32 *)resizedPixels, width*height);
+
+    if(argc > 3 && atoi(argv[3])) {
+        invert_colors((u32 *)resizedPixels, width*height);
+    }
 
     //NOTE: 1 extra column for newline char
     i32 outputCount = (height/4)*(width/2)+(height/4)+1;
-    printf("output character count: %d\n", outputCount);
     wchar_t *output = calloc(outputCount, sizeof(wchar_t));
     assert(output);
 
-    u32 weight = (argc > 7) ? clamp(atoi(argv[7]), 0, 255) : 3;
+    printf("output character count: %d\n", outputCount);
 
     u32 *p32 = (u32 *)resizedPixels;
     i32 outputIndex = 0;
