@@ -16,16 +16,15 @@ u32 to_braille(u8 v)
 {
     u32 result = 4;
 
-    if(v != 0)
-    {
-         result = (bit_is_set(v, 0) << 0)
-                + (bit_is_set(v, 1) << 1)
-                + (bit_is_set(v, 2) << 2)
-                + (bit_is_set(v, 4) << 3)
-                + (bit_is_set(v, 5) << 4)
-                + (bit_is_set(v, 6) << 5)
-                + (bit_is_set(v, 3) << 6)
-                + (bit_is_set(v, 7) << 7);
+    if(v) {
+        result = (bit_is_set(v, 0) << 0)
+               + (bit_is_set(v, 1) << 1)
+               + (bit_is_set(v, 2) << 2)
+               + (bit_is_set(v, 4) << 3)
+               + (bit_is_set(v, 5) << 4)
+               + (bit_is_set(v, 6) << 5)
+               + (bit_is_set(v, 3) << 6)
+               + (bit_is_set(v, 7) << 7);
     }
 
     return 0x2800+result;
@@ -33,19 +32,20 @@ u32 to_braille(u8 v)
 
 inline u32 rgb_sum(u32 c)
 {
-    return ((c >> 0) & 0xFF) + ((c >> 8) & 0xFF) + ((c >> 16) & 0xFF);
+    return ((c >> 0) & 0xFFu) + ((c >> 8) & 0xFFu) + ((c >> 16) & 0xFFu);
 }
 
 void flatten_alpha(u32 *pixels, i32 count, u32 threshold)
 {
     for(i32 i = 0; i < count; ++i) {
         if((pixels[i] >> 24) < threshold) {
-            pixels[i] = 0xFFFFFFFF;
+            pixels[i] = 0xFFFFFFFFu;
         }
     }
 }
 
-void invert_colors(u32 *pixels, i32 count) {
+void invert_colors(u32 *pixels, i32 count) 
+{
     for (i32 i = 0; i < count; ++i) {
         pixels[i] = (0xFFFFFFu - pixels[i]) | (pixels[i] & 0xFF000000u);
     }
@@ -69,8 +69,7 @@ int main(int argc, char **argv)
     //TODO: better handling of command line args such as order independence
     //      and input validation
     
-    if(argc < 2)
-    {
+    if(argc < 2) {
         printf("Error: need a file name\n"); 
         printf("Usage: [filename] [columns] [invert] [spaces] [color threshold] [alpha threshold] [weight]\n"); 
         return EXIT_FAILURE;
@@ -78,8 +77,7 @@ int main(int argc, char **argv)
 
     i32 inWidth, inHeight, comp;
     u8 *pixels = stbi_load(argv[1], &inWidth, &inHeight, &comp, 4);
-    if(!pixels)
-    {
+    if(!pixels) {
         printf("failed to load image: %s\n", argv[1]);
         return EXIT_FAILURE;
     }
@@ -94,8 +92,8 @@ int main(int argc, char **argv)
     printf("w: %d, h %d\n", width, height);
     u8 *resizedPixels = calloc(width*height, sizeof(u32));
     assert(resizedPixels);
-    if(!stbir_resize_uint8(pixels, inWidth, inHeight, 0, resizedPixels, width, height, 0, 4))
-    {
+
+    if(!stbir_resize_uint8(pixels, inWidth, inHeight, 0, resizedPixels, width, height, 0, 4)) {
         //TODO: perhaps better error handling
         printf("failed to resize image\n");
         free(pixels);
