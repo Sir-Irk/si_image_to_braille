@@ -23,6 +23,7 @@ Blank spaces currently do not use the blank braille character due to it messing 
 TODO: 
   - [ ] Better command line arg handling  
   - [ ] Cross platform file writing in utf-8(currently uses windows only code)
+  - [ ] Get rid of the awfulness that is windows.h
   - [ ] Desaturation options other than just weighted average 
   - [ ] GUI frontend for easier control of parameters and instant viewing of results
   - [ ] Dithering option
