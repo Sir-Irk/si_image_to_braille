@@ -110,7 +110,7 @@ int main(int argc, char **argv)
     if(argc > 3 && atoi(argv[3])) invert_colors((u32 *)resizedPixels, width*height);
 
     //NOTE: 1 extra column for newline char
-    i32 outputCount = (ceil(height/4)*ceil(width/2))+ceil(height/4)+1;
+    i32 outputCount = (height/4)*(width/2)+(height/4)+1;
     printf("output character count: %d\n", outputCount);
     wchar_t *output = calloc(outputCount, sizeof(wchar_t));
     assert(output);
