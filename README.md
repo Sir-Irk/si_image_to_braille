@@ -1,5 +1,5 @@
 # si_image_to_braille
-### Converts an image to braille characters(mainly for spamming in Twitch chat)
+### Converts an image to braille characters
 
 NOTE: I still need to do more testing and tweaking to get better results. This is just the initial version I'm saving.
 Currently is only usable from the command line.
